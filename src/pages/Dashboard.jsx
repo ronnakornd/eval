@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore'; 
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; 
 import { db } from '../FirebaseConfig'; // Import Firestore instance from FirebaseConfig
 import ActiveClass from '../components/ActiveClass';
 import InactiveClass from '../components/InactiveClass';
@@ -10,8 +10,8 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('activeClass');
   const [newClassData, setNewClassData] = useState({
     name: '',
-    level: 'intern',
-    active: true
+    level: 'extern',
+    active: true,
   });
 
   const handleInputChange = (e) => {
@@ -21,10 +21,10 @@ const Dashboard = () => {
 
   const handleNewClassSubmit = async () => {
     try {
-      await addDoc(collection(db, 'classes'), newClassData);
+      await addDoc(collection(db, 'classes'), {...newClassData, createdAt: serverTimestamp()});
       alert('Class added successfully');
       // Reset form
-      setNewClassData({ name: '', level: 'intern', active: true });
+      setNewClassData({ name: '', level: 'extern', active: true });
     } catch (error) {
       console.error('Error adding class: ', error);
     }
