@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from './Layout';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard'; 
+import Class from './pages/Class';
 import '@fontsource/pridi';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/class/:class_id" element={<Class />} />
             </Route>
           </Routes>
         </Suspense>

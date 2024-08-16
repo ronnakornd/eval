@@ -93,7 +93,7 @@ const ActiveClass = () => {
         </thead>
         <tbody>
           {selectedClasses.map((cls) => (
-            <tr key={cls.id} className="hover cursor-pointer">
+            <tr key={cls.id} className="hover cursor-pointer" onClick={()=>window.location.href=`/class/${cls.id}`}>
               <td>{cls.name}</td>
               <td>{cls.level}</td>
               <td>{cls.createdAt?.toDate().toLocaleString()}</td>
