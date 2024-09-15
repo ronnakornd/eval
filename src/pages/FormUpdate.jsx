@@ -62,30 +62,30 @@ function FormUpdate() {
           { label: "Update Form", value: "/form/update" },
         ]}
       />
-      <h1 className="text-2xl w-full text-center fontbold">ตอบแบบประเมิน</h1>
+      <h1 className="mt-5 text-2xl w-full text-center font-opunbold">ตอบแบบประเมิน</h1>
       <div className="my-5">
         <label className="label" htmlFor="">
           ชื่อแบบประเมิน
         </label>
-        <h1 className="text-lg text-stone-600 fontbold p-2">
+        <h1 className="text-sm md:text-lg text-stone-600 fontbold p-2">
           {selectedForm ? selectedForm.form.name : ""}
         </h1>
         <label className="label " htmlFor="">
           ชื่อนักศึกษา
         </label>
-        <h1 className="text-lg text-stone-600 fontbold p-2">
+        <h1 className="text-sm md:text-lg text-stone-600 fontbold p-2">
           {submission ? submission.user.name : ""}
         </h1>
         <label className="label " htmlFor="">
           อาจารย์ผู้ประเมิน
         </label>
-        <h1 className="text-lg text-stone-600 fontbold p-2">
+        <h1 className="text-sm md:text-lg text-stone-600 fontbold p-2">
           {submission ? submission.instructor.name : ""}
         </h1>
         <label className="label " htmlFor="">
           วันที่ส่งประเมิน
         </label>
-        <h1 className="text-lg text-stone-600 fontbold p-2">
+        <h1 className="text-sm md:text-lg text-stone-600 fontbold p-2">
           {submission ? submission.submitDate : ""}
         </h1>
       </div>

@@ -6,7 +6,7 @@ import {
   query,
   deleteDoc,
   doc,
-  and
+  and,
 } from "firebase/firestore";
 import { db } from "../FirebaseConfig";
 import { useOutletContext } from "react-router-dom";
@@ -26,7 +26,9 @@ function Unread() {
     const q = query(
       collection(db, "submissions"),
       where("approve", "==", false),
-      user.role == "instructor"? where("instructor", "==", {id:user.id,name: user.name}):where("user", "==", {id:user.id,name: user.name})
+      user.role == "instructor"
+        ? where("instructor", "==", { id: user.id, name: user.name })
+        : where("user", "==", { id: user.id, name: user.name })
     );
     const formDocs = await getDocs(q);
     const formData = formDocs.docs.map((doc) => ({
@@ -60,47 +62,74 @@ function Unread() {
     fetchUnapprove();
   }, [user]);
   return (
-    <div className="overflow-x-auto">
-      <table className="table table-zebra">
-        <thead>
-          <tr className="border-b border-t border-l border-r border-black text-sm font-bold bg-slate-300">
-            <th className="w-2/4 border-r border-black">ชื่อแบบประเมิน</th>
-            <th className="border-r border-black">ผุ้ส่ง</th>
-            <th className="border-r border-black">ผู้ประเมิน</th>
-            <th className="border-r border-black">วันที่ส่ง</th>
-            <th className="flex justify-center items-center">ลบ</th>
-          </tr>
-        </thead>
-        <tbody>
-          {selectedForms.map((cls) => (
-            <tr
-              key={cls.id}
-              className="border border-black bg-slate-100 hover cursor-pointer"
-            >
-              <td className="border-r border-black"> <a className="link"href={`/form/update/${cls.id}`}>{cls.form.form.name}</a></td>
-              <td className="border-r border-black">{cls.user.name}</td>
-              <td className="border-r border-black">{cls.instructor.name}</td>
-              <td className="border-r border-black">
-                {new Date(cls.submitDate).toLocaleString().substring(0, 10)}
-              </td>
-              <td className="flex justify-center items-center">
-                <button
-                  className="btn btn-error w-full"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setFormToDelete({ name: cls.name, id: cls.id });
-                    window.deleteClassModal.showModal();
-                  }}
-                >
-                  Delete
-                </button>
-              </td>
+    <div className="overflow-x-auto min-h-screen flex flex-col justify-between">
+      <div className="hidden md:block">
+        <table className="table table-zebra">
+          <thead>
+            <tr className="border-b border-t border-l border-r border-black text-sm font-bold bg-slate-300">
+              <th className="w-2/4 border-r border-black">ชื่อแบบประเมิน</th>
+              <th className="border-r border-black">ผุ้ส่ง</th>
+              <th className="border-r border-black">ผู้ประเมิน</th>
+              <th className="border-r border-black">วันที่ส่ง</th>
+              <th className="flex justify-center items-center">ลบ</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {selectedForms.map((cls) => (
+              <tr
+                key={cls.id}
+                className="border border-black bg-slate-100 hover cursor-pointer"
+              >
+                <td className="border-r border-black">
+                  {" "}
+                  <a className="link" href={`/form/update/${cls.id}`}>
+                    {cls.form.form.name}
+                  </a>
+                </td>
+                <td className="border-r border-black">{cls.user.name}</td>
+                <td className="border-r border-black">{cls.instructor.name}</td>
+                <td className="border-r border-black">
+                  {new Date(cls.submitDate).toLocaleString().substring(0, 10)}
+                </td>
+                <td className="flex justify-center items-center">
+                  <button
+                    className="btn btn-error w-full"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setFormToDelete({ name: cls.name, id: cls.id });
+                      window.deleteClassModal.showModal();
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
+      <div className="block md:hidden">
+        {selectedForms.map((cls) => (
+          <a href={`/form/update/${cls.id}`} className="card bg-slate-50 p-4 shadow-sm">
+            <div className="card-title text-xs">{cls.form.form.name}</div>
+            <div>
+              <p className="text-xs text-stone-500">{cls.submitDate}</p>
+            </div>
+            {user.role == "instructor" && (
+              <div>
+                <p className="text-xs">{cls.user.name}</p>
+              </div>
+            )}
+            {user.role == "student" && (
+              <div>
+                <p className="text-xs">ผู้ประเมิน: {cls.instructor.name}</p>
+              </div>
+            )}
+          </a>
+        ))}
+      </div>
       {/* Pagination Controls */}
       <div className="flex items-center justify-center my-4">
         <ReactPaginate

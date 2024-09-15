@@ -14,7 +14,15 @@ function FormViewer({ questions, setQuestions, role }) {
     <div className="mt-6 space-y-4">
       <>
         {questions
-          .filter((question) => question.section == role)
+          .filter((question) => {
+             if(role === "student") {
+                 if(question.role === "student") {
+                     return true
+                 }
+             }else{
+                  return true
+             }
+          })
           .map((question, index) => (
             <div className="bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
               <p className="text-md font bold mb-2">
@@ -25,19 +33,20 @@ function FormViewer({ questions, setQuestions, role }) {
               {question.type === "text" && (
                 <input
                   type="text"
-                  className="input input-bordered w-full"
+                  className="input text-sm input-bordered w-full"
                   placeholder="Enter answer"
                   value={question.answer}
                   onChange={(e) =>
                     handleValueChange(question.id, e.target.value)
                   }
+                  
                 />
               )}
 
               {question.type === "number" && (
                 <input
                   type="number"
-                  className="input input-bordered w-full"
+                  className="input text-sm input-bordered w-full"
                   placeholder="Enter answer"
                   value={question.answer}
                   onChange={(e) =>
@@ -49,7 +58,7 @@ function FormViewer({ questions, setQuestions, role }) {
               {question.type === "date" && (
                 <input
                   type="date"
-                  className="input input-bordered w-full"
+                  className="input text-sm input-bordered w-full"
                   placeholder="Enter answer"
                   value={question.answer}
                   onChange={(e) =>
@@ -61,7 +70,7 @@ function FormViewer({ questions, setQuestions, role }) {
               {question.type === "multipleChoice" && (
                 <div>
                   <select
-                    className="input input-bordered w-full"
+                    className="input text-sm input-bordered w-full"
                     name=""
                     id=""
                     value={question.answer}
@@ -79,10 +88,10 @@ function FormViewer({ questions, setQuestions, role }) {
                 </div>
               )}
               {question.type === "rating" && (
-                <div className="flex items-center gap-2 ">
+                <div className="flex items-center text-xs gap-2 ">
                   <div className="flex items-center gap-2">
                     <input
-                      className="radio"
+                      className="radio-xs md:radio"
                       type="radio"
                       id="5"
                       name={question.id}
@@ -96,7 +105,7 @@ function FormViewer({ questions, setQuestions, role }) {
                   </div>
                   <div className="flex items-center gap-2">
                     <input
-                      className="radio"
+                      className="radio-xs md:radio"
                       type="radio"
                       id="4"
                       name={question.id}
@@ -110,7 +119,7 @@ function FormViewer({ questions, setQuestions, role }) {
                   </div>
                   <div className="flex items-center gap-2">
                     <input
-                      className="radio"
+                      className="radio-xs md:radio"
                       type="radio"
                       id="3"
                       name={question.id}
@@ -124,7 +133,7 @@ function FormViewer({ questions, setQuestions, role }) {
                   </div>
                   <div className="flex items-center gap-2">
                     <input
-                      className="radio"
+                      className="radio-xs md:radio"
                       type="radio"
                       id="2"
                       name={question.id}
@@ -138,7 +147,7 @@ function FormViewer({ questions, setQuestions, role }) {
                   </div>
                   <div className="flex items-center gap-2">
                     <input
-                      className="radio"
+                      className="radio-xs md:radio"
                       type="radio"
                       id="1"
                       name={question.id}

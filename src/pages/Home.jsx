@@ -82,14 +82,14 @@ function Home() {
    }, [user]);
 
   return (
-    <div className="container mx-auto px-20 pt-40 pb-20 min-h-screen text-slate-900">
+    <div className="container mx-auto md:px-20 pt-10 px-5 md:pt-40 pb-20 min-h-screen text-slate-900">
       <div className="mb-16 flex flex-col justify-center items-center">
-        <h1 className="text-6xl font-opunbold text-sky-800">ระบบประเมินนักศึกษาแพทย์</h1>
-        <h2 className='text-4xl text-red-600'>สาขาวิชาเวชศาสตร์ฉุกเฉิน</h2>
-        <h3 className='text-2xl text-slate-600'>คณะแพทยศาสตร์ มหาวิทยาลัยขอนแก่น</h3>
+        <h1 className="text-2xl md:text-6xl font-opunbold text-sky-800">ระบบประเมินนักศึกษาแพทย์</h1>
+        <h2 className='text-xl md:text-4xl text-red-600'>สาขาวิชาเวชศาสตร์ฉุกเฉิน</h2>
+        <h3 className='text-xl md:text-2xl text-slate-600'>คณะแพทยศาสตร์ มหาวิทยาลัยขอนแก่น</h3>
       </div>
       <div className='md:px-60'>
-      <h1 className="text-xl font-bold mb-4">
+      <h1 className="text-lg md:text-xl font-bold mb-4">
         {isRegistering ? "ลงทะเบียน" : "เข้าสู่ระบบ"}
       </h1>
       {isRegistering && (

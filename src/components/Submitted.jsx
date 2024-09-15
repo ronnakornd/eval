@@ -60,7 +60,8 @@ function Submitted() {
     fetchUnapprove();
   }, [user]);
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto min-h-screen flex flex-col justify-between">
+       <div className="hidden md:block">
       <table className="table table-zebra">
         <thead>
           <tr className="border-b border-t border-l border-r border-black text-sm font-bold bg-slate-300">
@@ -100,6 +101,28 @@ function Submitted() {
           ))}
         </tbody>
       </table>
+      </div>
+
+      <div className="block md:hidden">
+        {selectedForms.map((cls) => (
+          <a href={`/form/update/${cls.id}`} className="card bg-slate-50 p-4 shadow-sm">
+            <div className="card-title text-xs">{cls.form.form.name}</div>
+            <div>
+              <p className="text-xs text-stone-500">{cls.submitDate}</p>
+            </div>
+            {user.role == "instructor" && (
+              <div>
+                <p className="text-xs">{cls.user.name}</p>
+              </div>
+            )}
+            {user.role == "student" && (
+              <div>
+                <p className="text-xs">ผู้ประเมิน: {cls.instructor.name}</p>
+              </div>
+            )}
+          </a>
+        ))}
+      </div>
 
       {/* Pagination Controls */}
       <div className="flex items-center justify-center my-4">

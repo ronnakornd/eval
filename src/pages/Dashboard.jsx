@@ -84,7 +84,7 @@ const Dashboard = () => {
       {user && user.role === "student" && (
         <>
           <div className="flex justify-start items-center space-x-4 mb-1">
-            <h2 className="text-xl">รายวิชา {myClass ? myClass.name : ""}</h2>
+            <h2 className="text-sm md:text-xl">รายวิชา {myClass ? myClass.name : ""}</h2>
             <h2 className="badge badge-neutral">
               {myClass ? myClass.level : ""}
             </h2>
@@ -99,7 +99,7 @@ const Dashboard = () => {
         </>
       )}
       <div className="flex justify-end space-x-4 mb-4">
-        {user && user.role === "instructor" && (
+        {user && user.role === "admin" && (
           <>
             <button
               className="btn btn-primary"
@@ -140,7 +140,7 @@ const Dashboard = () => {
         >
           ประเมินแล้ว
         </a>
-        {user && user.role === "instructor" && (
+        {user && user.role === "admin" && (
           <>
             <a
               role="tab"
@@ -266,7 +266,7 @@ const Dashboard = () => {
         </form>
       </dialog>
 
-
+{user && user.role === "student" && (
       <div>
         <a
           className="btn btn-primary text-white text-2xl btn-circle fixed bottom-5 right-5 "
@@ -275,6 +275,7 @@ const Dashboard = () => {
           +
         </a>
       </div>
+)}
     </div>
   );
 };
