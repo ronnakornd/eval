@@ -23,7 +23,11 @@ const ActiveClass = () => {
   const pageCount = Math.ceil(classes.length / itemsPerPage);
 
   const fetchClasses = async () => {
-    const q = query(collection(db, "classes"), where("active", "==", true), orderBy("createdAt", "desc"),);
+    const q = query(
+      collection(db, "classes"),
+      where("active", "==", true),
+      orderBy("createdAt", "desc")
+    );
     const querySnapshot = await getDocs(q);
     const fetchedClasses = querySnapshot.docs.map((doc) => ({
       ...doc.data(),
@@ -82,35 +86,45 @@ const ActiveClass = () => {
     <div className="overflow-x-auto">
       <table className="table table-zebra">
         <thead>
-          <tr className="border-b-2 border-black text-lg font-bold">
-            <th className="w-2/4">Name</th>
-            <th className="">Level</th>
-            <th>Created At</th>
-            <th>Active</th>
-            <th>Edit</th>
+          <tr className="border border-black text-sm bg-slate-300 font-bold">
+            <th className="w-2/4 border-r border-black">Name</th>
+            <th className="border-r border-black">Level</th>
+            <th className="border-r border-black">Created At</th>
+            <th className="border-r border-black">Active</th>
+            <th className="border-r border-black">Edit</th>
             <th className="flex justify-center items-center">Delete</th>
           </tr>
         </thead>
         <tbody>
           {selectedClasses.map((cls) => (
-            <tr key={cls.id} className="hover cursor-pointer" onClick={()=>window.location.href=`/class/${cls.id}`}>
-              <td>{cls.name}</td>
-              <td>{cls.level}</td>
-              <td>{cls.createdAt?.toDate().toLocaleString()}</td>
-              <td>
+            <tr
+              key={cls.id}
+              className="border border-black bg-slate-100  hover cursor-pointer"
+              onClick={() => (window.location.href = `/class/${cls.id}`)}
+            >
+              <td className="border-r border-black">{cls.name}</td>
+              <td className="border-r border-black">{cls.level}</td>
+              <td className="border-r border-black">{cls.createdAt?.toDate().toLocaleString()}</td>
+              <td className="border-r border-black">
                 <label className="cursor-pointer">
                   <input
                     type="checkbox"
                     className="toggle toggle-primary"
                     checked={cls.active}
-                    onChange={() => handleStatusToggle(cls.id, cls.active)}
+                    onChange={() => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleStatusToggle(cls.id, cls.active);
+                    }}
                   />
                 </label>
               </td>
-              <td>
+              <td className="border-r border-black">
                 <button
-                  className="btn btn-neutral"
-                  onClick={() => {
+                  className="btn btn-neutral w-full"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setClassToEdit({ name: cls.name, id: cls.id });
                     window.editClassModal.showModal();
                   }}
@@ -120,8 +134,10 @@ const ActiveClass = () => {
               </td>
               <td className="flex justify-center items-center">
                 <button
-                  className="btn btn-error"
-                  onClick={() => {
+                  className="btn btn-error w-full"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setClassToDelete({ name: cls.name, id: cls.id });
                     window.deleteClassModal.showModal();
                   }}
@@ -137,23 +153,23 @@ const ActiveClass = () => {
       {/* Pagination Controls */}
       <div className="flex items-center justify-center my-4">
         <ReactPaginate
-         previousLabel={"<"}
-         nextLabel={">"}
-         breakLabel={"..."}
-         pageCount={pageCount}
-         marginPagesDisplayed={2}
-         pageRangeDisplayed={5}
-         onPageChange={handlePageClick}
-         onClick={handlePageClick}
-         containerClassName={""}
-         pageClassName={"btn btn-sm"}
-         pageLinkClassName={""}
-         previousClassName={"btn btn-sm"}
-         previousLinkClassName={""}
-         nextClassName={"btn btn-sm"}
-         nextLinkClassName={""}
-         breakClassName={"btn btn-sm"}
-         activeClassName={"btn-primary"}
+          previousLabel={"<"}
+          nextLabel={">"}
+          breakLabel={"..."}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          onClick={handlePageClick}
+          containerClassName={""}
+          pageClassName={"btn btn-sm"}
+          pageLinkClassName={""}
+          previousClassName={"btn btn-sm"}
+          previousLinkClassName={""}
+          nextClassName={"btn btn-sm"}
+          nextLinkClassName={""}
+          breakClassName={"btn btn-sm"}
+          activeClassName={"btn-primary"}
         />
       </div>
 

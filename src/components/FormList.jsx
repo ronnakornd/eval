@@ -12,20 +12,19 @@ import { query } from "firebase/firestore";
 import { db } from "../FirebaseConfig";
 import ReactPaginate from "react-paginate";
 
-const ActiveClass = () => {
-  const [classes, setClasses] = useState([]);
+const formList = () => {
+  const [forms, setForms] = useState([]);
   const [itemsPerPage] = useState(5);
-  const [classToEdit, setClassToEdit] = useState(null);
-  const [classToDelete, setClassToDelete] = useState(null);
+  const [formToEdit, setFormToEdit] = useState(null);
+  const [formToDelete, setFormToDelete] = useState(null);
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + itemsPerPage;
-  const selectedClasses = classes.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(classes.length / itemsPerPage);
+  const selectedForms = forms.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(forms.length / itemsPerPage);
 
-  const fetchClasses = async () => {
+  const fetchForms = async () => {
     const q = query(
-      collection(db, "classes"),
-      where("active", "==", false),
+      collection(db, "forms"),
       orderBy("createdAt", "desc")
     );
     const querySnapshot = await getDocs(q);
@@ -33,29 +32,29 @@ const ActiveClass = () => {
       ...doc.data(),
       id: doc.id,
     }));
-    setClasses(fetchedClasses);
+    setForms(fetchedClasses);
   };
 
   useEffect(() => {
-    fetchClasses();
+    fetchForms();
   }, []);
 
   const handleStatusToggle = async (id, currentStatus) => {
-    const classRef = doc(db, "classes", id);
+    const classRef = doc(db, "forms", id);
     await updateDoc(classRef, { active: !currentStatus });
-    setClasses(
-      classes.map((c) => (c.id === id ? { ...c, active: !currentStatus } : c))
+    setForms(
+      forms.map((c) => (c.id === id ? { ...c, active: !currentStatus } : c))
     );
-    fetchClasses();
+    fetchForms();
   };
 
   const handleUpdateClass = async () => {
-    if (classToEdit) {
+    if (formToEdit) {
       try {
-        const classRef = doc(db, "classes", classToEdit.id);
-        await updateDoc(classRef, { name: classToEdit.name });
-        fetchClasses();
-        setClassToEdit(null);
+        const classRef = doc(db, "classes", formToEdit.id);
+        await updateDoc(classRef, { name: formToEdit.name });
+        fetchForms();
+        setFormToEdit(null);
         window.editClassModal.close();
       } catch (error) {
         console.error("Error updating class: ", error);
@@ -64,13 +63,13 @@ const ActiveClass = () => {
   };
 
   const handleDeleteClass = async () => {
-    if (classToDelete) {
+    if (formToDelete) {
       try {
-        await deleteDoc(doc(db, "classes", classToDelete.id));
-        setClasses(classes.filter((c) => c.id !== classToDelete.id));
-        setClassToDelete(null);
+        await deleteDoc(doc(db, "forms", formToDelete.id));
+        setForms(forms.filter((c) => c.id !== formToDelete.id));
+        setFormToDelete(null);
         window.deleteClassModal.close();
-        fetchClasses();
+        fetchForms();
       } catch (error) {
         console.error("Error deleting class: ", error);
       }
@@ -78,7 +77,7 @@ const ActiveClass = () => {
   };
 
   const handlePageClick = (data) => {
-    const newOffset = (data.selected * itemsPerPage) % classes.length;
+    const newOffset = (data.selected * itemsPerPage) % forms.length;
     setItemOffset(newOffset);
   };
 
@@ -86,51 +85,28 @@ const ActiveClass = () => {
     <div className="overflow-x-auto">
       <table className="table table-zebra">
         <thead>
-          <tr className="border border-black text-sm bg-slate-300 font-bold">
+          <tr className="border-b border-t border-l border-r border-black text-sm font-bold bg-slate-300">
             <th className="w-2/4 border-r border-black">Name</th>
-            <th className="border-r border-black">Level</th>
             <th className="border-r border-black">Created At</th>
-            <th className="border-r border-black">Active</th>
             <th className="border-r border-black">Edit</th>
             <th className="flex justify-center items-center">Delete</th>
           </tr>
         </thead>
         <tbody>
-          {selectedClasses.map((cls) => (
+          {selectedForms.map((cls) => (
             <tr
               key={cls.id}
-              className="border border-black bg-slate-100  hover cursor-pointer"
-              onClick={() => (window.location.href = `/class/${cls.id}`)}
+              className="border border-black bg-slate-100 hover cursor-pointer"
             >
-              <td className="border-r border-black">{cls.name}</td>
-              <td className="border-r border-black">{cls.level}</td>
+              <td className="border-r border-black">{cls.form.name}</td>
               <td className="border-r border-black">{cls.createdAt?.toDate().toLocaleString()}</td>
               <td className="border-r border-black">
-                <label className="cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="toggle toggle-primary"
-                    checked={cls.active}
-                    onChange={() => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleStatusToggle(cls.id, cls.active);
-                    }}
-                  />
-                </label>
-              </td>
-              <td className="border-r border-black">
-                <button
+                <a
                   className="btn btn-neutral w-full"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setClassToEdit({ name: cls.name, id: cls.id });
-                    window.editClassModal.showModal();
-                  }}
+                  href={`/form/edit/${cls.id}`}
                 >
                   Edit
-                </button>
+                </a>
               </td>
               <td className="flex justify-center items-center">
                 <button
@@ -138,7 +114,7 @@ const ActiveClass = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    setClassToDelete({ name: cls.name, id: cls.id });
+                    setFormToDelete({ name: cls.name, id: cls.id });
                     window.deleteClassModal.showModal();
                   }}
                 >
@@ -173,28 +149,7 @@ const ActiveClass = () => {
         />
       </div>
 
-      {/* Edit Class Modal */}
-      <dialog id="editClassModal" className="modal">
-        <form method="dialog" className="modal-box">
-          <h3 className="font-bold text-lg">Edit Class</h3>
-          <input
-            type="text"
-            className="input input-bordered w-full"
-            value={classToEdit ? classToEdit.name : ""}
-            onChange={(e) =>
-              setClassToEdit({ ...classToEdit, name: e.target.value })
-            }
-          />
-          <div className="modal-action">
-            <button className="btn btn-primary" onClick={handleUpdateClass}>
-              Save
-            </button>
-            <button className="btn" onClick={() => setClassToEdit(null)}>
-              Cancel
-            </button>
-          </div>
-        </form>
-      </dialog>
+   
 
       {/* Delete Confirmation Modal */}
       <dialog id="deleteClassModal" className="modal">
@@ -202,13 +157,13 @@ const ActiveClass = () => {
           <h3 className="font-bold text-lg">Confirm Delete</h3>
           <p>
             Are you sure you want to delete{" "}
-            <b>{classToDelete ? classToDelete.name : ""}</b>?
+            <b>{formToDelete ? formToDelete.name : ""}</b>?
           </p>
           <div className="modal-action">
             <button className="btn btn-error" onClick={handleDeleteClass}>
               Yes, Delete
             </button>
-            <button className="btn" onClick={() => setClassToDelete(null)}>
+            <button className="btn" onClick={() => setFormToDelete(null)}>
               Cancel
             </button>
           </div>
@@ -218,4 +173,4 @@ const ActiveClass = () => {
   );
 };
 
-export default ActiveClass;
+export default formList;
