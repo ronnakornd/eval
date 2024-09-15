@@ -84,8 +84,8 @@ function Home() {
   return (
     <div className="container mx-auto px-20 pt-40 pb-20 min-h-screen text-slate-900">
       <div className="mb-16 flex flex-col justify-center items-center">
-        <h1 className="text-4xl">ระบบประเมินนักศึกษาแพทย์</h1>
-        <h2 className='text-3xl text-slate-600'>สาขาวิชาเวชศาสตร์ฉุกเฉิน</h2>
+        <h1 className="text-6xl font-opunbold text-sky-800">ระบบประเมินนักศึกษาแพทย์</h1>
+        <h2 className='text-4xl text-red-600'>สาขาวิชาเวชศาสตร์ฉุกเฉิน</h2>
         <h3 className='text-2xl text-slate-600'>คณะแพทยศาสตร์ มหาวิทยาลัยขอนแก่น</h3>
       </div>
       <div className='md:px-60'>

@@ -7,8 +7,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Pridi', 'sans-serif'],
-      },
+  		bangna: ['BangnaNew', 'sans-serif'],
+			opun: ['OpunMai', 'sans-serif'],
+			opunbold: ['OpunMaiBold', 'sans-serif'],
+			opunsemibold: ['OpunMaiSemiBold', 'sans-serif'],
+  		},
     },
   },
   plugins: [

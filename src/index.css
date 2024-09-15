@@ -2,3 +2,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: 'OpunMai';
+    src: url('/src/assets/fonts/Opun-Mai-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'OpunMaiBold';
+    src: url('/src/assets/fonts/Opun-Mai-Bold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'OpunMaiSemiBold';
+    src: url('/src/assets/fonts/Opun-Mai-SemiBold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @layer base {
+    body {
+      @apply font-opun;
+    }
+}

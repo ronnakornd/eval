@@ -15,6 +15,7 @@ import Submitted from "../components/Submitted";
 import FormList from "../components/FormList";
 import { useParams, useOutletContext } from "react-router-dom";
 import Breadcrumbs from "../components/Breadcrumbs";
+import UserImport from "../components/UserImport";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("unread");
@@ -106,7 +107,9 @@ const Dashboard = () => {
             >
               New Class
             </button>
-            <button className="btn btn-secondary">New Student</button>
+            <button className="btn btn-secondary"
+               onClick={() => window.importStudentModal.showModal()}
+            >Import Student</button>
             <button
               className="btn btn-accent"
               onClick={() => (window.location.href = `/form/create`)}
@@ -248,6 +251,21 @@ const Dashboard = () => {
           </div>
         </form>
       </dialog>
+
+      <dialog id="importStudentModal" className="modal">
+        <form method="dialog" className="modal-box">
+           <UserImport />
+          <div className="modal-action">
+            <button
+              className="btn"
+              onClick={() => window.newClassModal.close()}
+            >
+              Close
+            </button>
+          </div>
+        </form>
+      </dialog>
+
 
       <div>
         <a
