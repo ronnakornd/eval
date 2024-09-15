@@ -103,7 +103,7 @@ function Submitted() {
       </table>
       </div>
 
-      <div className="block md:hidden">
+      <div className="flex flex-col gap-2 md:hidden">
         {selectedForms.map((cls) => (
           <a href={`/form/update/${cls.id}`} className="card bg-slate-50 p-4 shadow-sm">
             <div className="card-title text-xs">{cls.form.form.name}</div>

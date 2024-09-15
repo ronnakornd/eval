@@ -16,11 +16,11 @@ function FormViewer({ questions, setQuestions, role }) {
         {questions
           .filter((question) => {
              if(role === "student") {
-                 if(question.role === "student") {
-                     return true
+                 if(question.section === "student") {
+                     return true;
                  }
              }else{
-                  return true
+                  return true;
              }
           })
           .map((question, index) => (

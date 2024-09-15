@@ -122,30 +122,30 @@ function FormSubmit() {
           { label: "Submit Form", value: "/form/submit" },
         ]}
       />
-          <h1 className="text-xl fontbold my-5">ส่งแบบประเมิน</h1>
-          <Select options={formOptions} onChange={handleSelectForm} />
+          <h1 className="text-2xl w-full text-center font-opunbold my-5">ส่งแบบประเมิน</h1>
+          <Select className="text-sm" options={formOptions} onChange={handleSelectForm} />
 
       <div className="my-5">
         <label className="label" htmlFor="">
           ชื่อแบบประเมิน
         </label>
-        <h1 className="text-xl fontbold p-2">
+        <h1 className="text-sm md:text-xl fontbold p-2">
           {selectedForm ? selectedForm.form.name : ""}
         </h1>
         <label className="label " htmlFor="">
           ชื่อนักศึกษา
         </label>
-        <h1 className="text-xl fontbold p-2">{user ? user.name : ""}</h1>
+        <h1 className="text-sm md:text-xl fontbold p-2">{user ? user.name : ""}</h1>
         <label className="label " htmlFor="">
           อาจารย์ผู้ประเมิน
         </label>
-        <Select options={instructorOptions} onChange={handleSelectInstructor} />
+        <Select className="text-sm" options={instructorOptions} onChange={handleSelectInstructor} />
         <label className="label " htmlFor="">
           วันที่ส่งประเมิน
         </label>
         <input
           type="date"
-          className="input input-bordered w-full"
+          className="input text-sm input-bordered w-full"
           value={submitDate}
           onChange={(e) => setSubmitDate(e.target.value)}
         />
