@@ -45,7 +45,7 @@ function FormUpdate() {
     };
     await updateDoc(doc(db, "submissions", form_id), data).then(() => {
       alert("Form submitted successfully");
-      window.location.reload();
+      window.location.href = "/dashboard";
     });
   };
 

@@ -25,6 +25,7 @@ function FormSubmit() {
   const [submitDate, setSubmitDate] = useState(
     new Date().toISOString().split("T")[0]
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchForm = async () => {
     const classDoc = doc(db, "classes", user.class);
@@ -84,6 +85,7 @@ function FormSubmit() {
   };
 
   const submitForm = async () => {
+    setIsSubmitting(true);
     const data = {
       form: selectedForm,
       user: { id: user.id, name: user.name },
@@ -99,6 +101,8 @@ function FormSubmit() {
     await addDoc(collection(db, "submissions"), data)
       .then((docRef) => {
         console.log("Document written with ID: ", docRef.id);
+        setIsSubmitting(false);
+        window.location.href = "/dashboard";
       })
       .catch((error) => {
         console.error("Error adding document: ", error);
@@ -157,9 +161,11 @@ function FormSubmit() {
       />
 
       <div className="p-5">
+        {isSubmitting && <div className="loading loading-dots loading-sm"></div>}
+        {!isSubmitting && (
         <div className="btn btn-neutral w-full" onClick={submitForm}>
           ส่งแบบประเมิน
-        </div>
+        </div>)}
       </div>
     </div>
   );

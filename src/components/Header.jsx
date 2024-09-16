@@ -3,7 +3,9 @@ import React from "react";
 function Header({ logout, user }) {
   return (
     <div className="w-full h-14 bg-blue-900 flex justify-between items-center px-5">
-      <img src="/favicon.ico" alt="" className="w-10 h-10 invert" />
+      <a href="/">
+      <img src="/favicon.ico" alt="" className="w-10 h-10 invert"  />
+      </a>
       {user && (
         <div className="flex items-center justify-center gap-2">
           <div className="drawer drawer-end">
