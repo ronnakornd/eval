@@ -87,26 +87,47 @@ function FormViewer({ questions, setQuestions, role }) {
               )}
               {question.type === "rating" && (
                 <div className="flex items-start flex-col text-xs gap-2 ">
-                  {question.rating.choices.map((choice, i) => (
-                    <div className="flex  items-center gap-2">
-                      {choice.enable && (
-                        <>
-                          <input
-                            className="radio-xs md:radio"
-                            type="radio"
-                            id={i}
-                            name={question.id}
-                            value={i + 1}
-                            onChange={(e) =>
-                              handleValueChange(question.id, e.target.value)
-                            }
-                            checked={question.answer === (i + 1).toString()}
-                          />
-                          <label htmlFor={index}>{choice.text}</label>
-                        </>
-                      )}
-                    </div>
-                  ))}
+                  {question.rating.choices != undefined &&
+                    question.rating.choices.map((choice, i) => (
+                      <div className="flex  items-center gap-2" key={i}>
+                        {choice.enable && (
+                          <>
+                            <input
+                              className="radio-xs md:radio"
+                              type="radio"
+                              id={i}
+                              name={question.id}
+                              value={i + 1}
+                              onChange={(e) =>
+                                handleValueChange(question.id, e.target.value)
+                              }
+                              checked={question.answer === (i + 1).toString()}
+                            />
+                            <label htmlFor={index}>{choice.text}</label>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                    {question.rating.choices == undefined && (
+                      <div className="flex flex-col justify-center items-start gap-2" >
+                        {["ควรปรับปรุง","แย่","พอใช้","ดี","ดีมาก"].map((choice,i) => (
+                          <div className="flex gap-2 items-center" key={i}>
+                            <input
+                              className="radio-xs md:radio"
+                              type="radio"
+                              id={i}
+                              name={question.id}
+                              value={i+1}
+                              onChange={(e) =>
+                                handleValueChange(question.id, e.target.value)
+                              }
+                              checked={question.answer === (i+1).toString()}
+                            />
+                            <label htmlFor={index}>{choice}</label>
+                          </div>
+                        ))}
+                        </div>
+                    )}
                 </div>
               )}
             </div>
