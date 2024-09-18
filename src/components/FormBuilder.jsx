@@ -55,7 +55,9 @@ const FormBuilder = ({ currentForm }) => {
 
   const handleRatingChange = (questionId, rating) => {
     setQuestions(
-      questions.map((q) => (q.id === questionId ? { ...q, rating, answer: rating.defaultRating } : q))
+      questions.map((q) =>
+        q.id === questionId ? { ...q, rating, answer: rating.defaultRating } : q
+      )
     );
   };
 
@@ -78,7 +80,7 @@ const FormBuilder = ({ currentForm }) => {
       form,
       createdAt: serverTimestamp(),
     }).then((docRef) => {
-          window.location.href = `/form/edit/${docRef.id}`;
+      window.location.href = `/form/edit/${docRef.id}`;
     });
   };
 
@@ -176,6 +178,13 @@ const FormBuilder = ({ currentForm }) => {
                     />
                   )}
 
+                  {question.type === "textarea" && (
+                    <textarea
+                      className="textarea textarea-bordered w-full"
+                      placeholder="Enter answer"
+                    />
+                  )}
+
                   {question.type === "multipleChoice" && (
                     <div>
                       <MultipleChoiceQuestion
@@ -214,6 +223,13 @@ const FormBuilder = ({ currentForm }) => {
                   <input
                     type="text"
                     className="input input-bordered w-full"
+                    placeholder="Enter answer"
+                  />
+                )}
+
+                {question.type === "textarea" && (
+                  <textarea
+                    className="textarea textarea-bordered w-full"
                     placeholder="Enter answer"
                   />
                 )}
@@ -280,6 +296,7 @@ const FormBuilder = ({ currentForm }) => {
                 >
                   <option value="">เลือกชนิดคำถาม</option>
                   <option value="text">Text</option>
+                  <option value="textarea">Description</option>
                   <option value="number">Number</option>
                   <option value="multipleChoice">Multiple Choice</option>
                   <option value="rating">Rating</option>

@@ -24,8 +24,10 @@ function FormUpdate() {
     const formDoc = doc(db, "submissions", form_id);
     const formQuery = await getDoc(formDoc);
     const formData = { id: formQuery.id, ...formQuery.data() };
+    console.log(formData);
     setSubmission(formData);
     setSelectedForm(formData.form);
+    
   };
 
   const handleChange = (questions) => {

@@ -51,6 +51,9 @@ const Dashboard = () => {
     if (user && user.role === "student") {
       getMyClass();
     }
+    if(user && user.role === "admin"){
+      setActiveTab("activeClass");
+    }
   }, [tab, user]);
 
   const handleInputChange = (e) => {
@@ -84,7 +87,9 @@ const Dashboard = () => {
       {user && user.role === "student" && (
         <>
           <div className="flex justify-start items-center space-x-4 mb-1">
-            <h2 className="text-sm md:text-xl">รายวิชา {myClass ? myClass.name : ""}</h2>
+            <h2 className="text-sm md:text-xl">
+              รายวิชา {myClass ? myClass.name : ""}
+            </h2>
             <h2 className="badge badge-neutral">
               {myClass ? myClass.level : ""}
             </h2>
@@ -107,9 +112,12 @@ const Dashboard = () => {
             >
               New Class
             </button>
-            <button className="btn btn-secondary"
-               onClick={() => window.importStudentModal.showModal()}
-            >Import Student</button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => window.importStudentModal.showModal()}
+            >
+              Import Student
+            </button>
             <button
               className="btn btn-accent"
               onClick={() => (window.location.href = `/form/create`)}
@@ -122,24 +130,29 @@ const Dashboard = () => {
 
       {/* Tabs */}
       <div role="tablist" className="tabs tabs-lifted w-4/4 md:w-2/4">
-        <a
-          role="tab"
-          className={`tab tab-bordered ${
-            activeTab === "unread" ? "tab-active" : ""
-          }`}
-          onClick={() => setActiveTab("unread")}
-        >
-          รอประเมิน
-        </a>
-        <a
-          role="tab"
-          className={`tab tab-bordered ${
-            activeTab === "submitted" ? "tab-active" : ""
-          }`}
-          onClick={() => setActiveTab("submitted")}
-        >
-          ประเมินแล้ว
-        </a>
+        {user && user.role != "admin" && (
+          <>
+            <a
+              role="tab"
+              className={`tab tab-bordered ${
+                activeTab === "unread" ? "tab-active" : ""
+              }`}
+              onClick={() => setActiveTab("unread")}
+            >
+              รอประเมิน
+            </a>
+            <a
+              role="tab"
+              className={`tab tab-bordered ${
+                activeTab === "submitted" ? "tab-active" : ""
+              }`}
+              onClick={() => setActiveTab("submitted")}
+            >
+              ประเมินแล้ว
+            </a>
+          </>
+        )}
+
         {user && user.role === "admin" && (
           <>
             <a
@@ -254,7 +267,7 @@ const Dashboard = () => {
 
       <dialog id="importStudentModal" className="modal">
         <form method="dialog" className="modal-box">
-           <UserImport />
+          <UserImport />
           <div className="modal-action">
             <button
               className="btn"
@@ -266,16 +279,16 @@ const Dashboard = () => {
         </form>
       </dialog>
 
-{user && user.role === "student" && (
-      <div>
-        <a
-          className="btn btn-primary text-white text-2xl btn-circle fixed bottom-5 right-5 "
-          href="/form/submit"
-        >
-          +
-        </a>
-      </div>
-)}
+      {user && user.role === "student" && (
+        <div>
+          <a
+            className="btn btn-primary text-white text-2xl btn-circle fixed bottom-5 right-5 "
+            href="/form/submit"
+          >
+            +
+          </a>
+        </div>
+      )}
     </div>
   );
 };
