@@ -86,6 +86,26 @@ function FormSubmit() {
 
   const submitForm = async () => {
     setIsSubmitting(true);
+    if(!selectedForm){
+      alert("Please select a form");
+      setIsSubmitting(false);
+      return;
+    }
+    if(!selectedInstructor){
+      alert("Please select an instructor");
+      setIsSubmitting(false);
+      return;
+    }
+    if(!user){
+      alert("Please login to submit form");
+      setIsSubmitting(false);
+      return;
+    }
+    if(submitDate === ""){
+      alert("Please select a submit date");
+      setIsSubmitting(false);
+      return;
+    }
     const data = {
       form: selectedForm,
       user: { id: user.id, name: user.name },
@@ -127,6 +147,7 @@ function FormSubmit() {
         ]}
       />
           <h1 className="text-2xl w-full text-center font-opunbold my-5">ส่งแบบประเมิน</h1>
+      <label className="label" htmlFor=""> เลือกแบบประเมิน</label>
           <Select className="text-sm" options={formOptions} onChange={handleSelectForm} />
 
       <div className="my-5">

@@ -15,7 +15,7 @@ import ReactPaginate from "react-paginate";
 function Unread() {
   const [user, setUser] = useOutletContext();
   const [forms, setForms] = useState([]);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(10);
   const [formToDelete, setFormToDelete] = useState(null);
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + itemsPerPage;
@@ -83,7 +83,7 @@ function Unread() {
                 <td className="border-r border-black">
                   {" "}
                   <a className="link" href={`/form/update/${cls.id}`}>
-                    {cls.form.form.name}
+                    {cls.form? cls.form.form.name:""}
                   </a>
                 </td>
                 <td className="border-r border-black">{cls.user.name}</td>
@@ -113,18 +113,18 @@ function Unread() {
       <div className="flex flex-col gap-2 md:hidden">
         {selectedForms.map((cls) => (
           <a href={`/form/update/${cls.id}`} className="card bg-slate-50 p-4 shadow-sm">
-            <div className="card-title text-xs">{cls.form.form.name}</div>
+            <div className="card-title text-xs">{cls.form? cls.form.form.name:""}</div>
             <div>
-              <p className="text-xs text-stone-500">{cls.submitDate}</p>
+              <p className="text-xs text-stone-500">{cls.submitDate? cls.submitDate: ""}</p>
             </div>
             {user.role == "instructor" && (
               <div>
-                <p className="text-xs">{cls.user.name}</p>
+                <p className="text-xs">{cls.user? cls.user.name:""}</p>
               </div>
             )}
             {user.role == "student" && (
               <div>
-                <p className="text-xs">ผู้ประเมิน: {cls.instructor.name}</p>
+                <p className="text-xs">ผู้ประเมิน: {cls.instructor? cls.instructor.name:""}</p>
               </div>
             )}
           </a>

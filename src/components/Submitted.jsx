@@ -15,7 +15,7 @@ import ReactPaginate from "react-paginate";
 function Submitted() {
   const [user, setUser] = useOutletContext();
   const [forms, setForms] = useState([]);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(10);
   const [formToDelete, setFormToDelete] = useState(null);
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + itemsPerPage;
@@ -61,7 +61,7 @@ function Submitted() {
   }, [user]);
   return (
     <div className="overflow-x-auto min-h-screen flex flex-col justify-between">
-       <div className="hidden md:block">
+    <div className="hidden md:block">
       <table className="table table-zebra">
         <thead>
           <tr className="border-b border-t border-l border-r border-black text-sm font-bold bg-slate-300">
@@ -78,7 +78,12 @@ function Submitted() {
               key={cls.id}
               className="border border-black bg-slate-100 hover cursor-pointer"
             >
-              <td className="border-r border-black"> <a className="link"href={`/form/update/${cls.id}`}>{cls.form.form.name}</a></td>
+              <td className="border-r border-black">
+                {" "}
+                <a className="link" href={`/form/update/${cls.id}`}>
+                  {cls.form? cls.form.form.name:""}
+                </a>
+              </td>
               <td className="border-r border-black">{cls.user.name}</td>
               <td className="border-r border-black">{cls.instructor.name}</td>
               <td className="border-r border-black">
@@ -101,29 +106,28 @@ function Submitted() {
           ))}
         </tbody>
       </table>
-      </div>
+    </div>
 
-      <div className="flex flex-col gap-2 md:hidden">
-        {selectedForms.map((cls) => (
-          <a href={`/form/update/${cls.id}`} className="card bg-slate-50 p-4 shadow-sm">
-            <div className="card-title text-xs">{cls.form.form.name}</div>
+    <div className="flex flex-col gap-2 md:hidden">
+      {selectedForms.map((cls) => (
+        <a href={`/form/update/${cls.id}`} className="card bg-slate-50 p-4 shadow-sm">
+          <div className="card-title text-xs">{cls.form? cls.form.form.name:""}</div>
+          <div>
+            <p className="text-xs text-stone-500">{cls.submitDate? cls.submitDate: ""}</p>
+          </div>
+          {user.role == "instructor" && (
             <div>
-              <p className="text-xs text-stone-500">{cls.submitDate}</p>
+              <p className="text-xs">{cls.user? cls.user.name:""}</p>
             </div>
-            {user.role == "instructor" && (
-              <div>
-                <p className="text-xs">{cls.user.name}</p>
-              </div>
-            )}
-            {user.role == "student" && (
-              <div>
-                <p className="text-xs">ผู้ประเมิน: {cls.instructor.name}</p>
-              </div>
-            )}
-          </a>
-        ))}
-      </div>
-
+          )}
+          {user.role == "student" && (
+            <div>
+              <p className="text-xs">ผู้ประเมิน: {cls.instructor? cls.instructor.name:""}</p>
+            </div>
+          )}
+        </a>
+      ))}
+    </div>
       {/* Pagination Controls */}
       <div className="flex items-center justify-center my-4">
         <ReactPaginate
