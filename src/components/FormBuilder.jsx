@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import DraggableQuestion from "./DraggableQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import RatingQuestion from "./RatingQuestion";
+import ScoreQuestion from "./ScoreQuestion";
 import {
   collection,
   addDoc,
@@ -57,6 +58,14 @@ const FormBuilder = ({ currentForm }) => {
     setQuestions(
       questions.map((q) =>
         q.id === questionId ? { ...q, rating, answer: rating.defaultRating } : q
+      )
+    );
+  };
+
+  const handleScoreChange = (questionId, setting) => {
+    setQuestions(
+      questions.map((q) =>
+        q.id === questionId ? { ...q, setting, answer: setting.defaultScore } : q
       )
     );
   };
@@ -203,85 +212,22 @@ const FormBuilder = ({ currentForm }) => {
                       />
                     </div>
                   )}
+                  {question.type === "score" && (         
+                    <div>
+                      <ScoreQuestion
+                        questionId={question.id}
+                        onSave={handleScoreChange}
+                        setting={question.setting}
+                      />
+                    </div>
+                 )
+                  }
                 </div>
               </DraggableQuestion>
             ))}
           </div>
         )}
 
-        {isPreview && (
-          <>
-            <h1 className="text-xl mb-4">{formName}</h1>
-            {questions.map((question, index) => (
-              <div className="bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
-                <p className="text-md font bold mb-2">
-                  {" "}
-                  {index + 1}. {question.question}
-                </p>
-
-                {question.type === "text" && (
-                  <input
-                    type="text"
-                    className="input input-bordered w-full"
-                    placeholder="Enter answer"
-                  />
-                )}
-
-                {question.type === "textarea" && (
-                  <textarea
-                    className="textarea textarea-bordered w-full"
-                    placeholder="Enter answer"
-                  />
-                )}
-
-                {question.type === "number" && (
-                  <input
-                    type="number"
-                    className="input input-bordered w-full"
-                    placeholder="Enter answer"
-                  />
-                )}
-
-                {question.type === "date" && (
-                  <input
-                    type="date"
-                    className="input input-bordered w-full"
-                    placeholder="Enter answer"
-                  />
-                )}
-
-                {question.type === "multipleChoice" && (
-                  <div>
-                    <select
-                      className="input input-bordered w-full"
-                      name=""
-                      id=""
-                    >
-                      <option value="">Select choice</option>
-                      {question.choices.map((choice) => (
-                        <option key={choice.id} value={choice.text}>
-                          {choice.text}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-                {question.type === "rating" && (
-                  <div className="rating">
-                    {[...Array(question.rating.maxRating)].map((_, i) => (
-                      <input
-                        type="radio"
-                        name="rating-1"
-                        className="mask mask-star"
-                        value={i + 1}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </>
-        )}
         <div className="space-y-4 mt-4">
           {!isPreview && (
             <>
@@ -300,6 +246,7 @@ const FormBuilder = ({ currentForm }) => {
                   <option value="number">Number</option>
                   <option value="multipleChoice">Multiple Choice</option>
                   <option value="rating">Rating</option>
+                  <option value="score">Score</option>
                   <option value="date">Date</option>
                 </select>
                 <select
@@ -323,18 +270,6 @@ const FormBuilder = ({ currentForm }) => {
               </button>
             </>
           )}
-          <div className="form-control">
-            <label className="label cursor-pointer">
-              <span className="text-xl font bold">Preview</span>
-              <input
-                type="checkbox"
-                className="toggle"
-                value={isPreview}
-                onClick={() => setIsPreview(!isPreview)}
-                checked={isPreview}
-              />
-            </label>
-          </div>
         </div>
       </div>
     </div>

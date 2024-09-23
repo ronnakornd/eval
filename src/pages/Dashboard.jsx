@@ -16,8 +16,10 @@ import FormList from "../components/FormList";
 import { useParams, useOutletContext } from "react-router-dom";
 import Breadcrumbs from "../components/Breadcrumbs";
 import UserImport from "../components/UserImport";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const Dashboard = () => {
+  const auth = getAuth();
   const [activeTab, setActiveTab] = useState("unread");
   const [user, setUser] = useOutletContext();
   const [myClass, setMyClass] = useState(null);
@@ -55,6 +57,21 @@ const Dashboard = () => {
       setActiveTab("activeClass");
     }
   }, [tab, user]);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, you can access user information here
+        console.log("User is logged in:", user);
+        console.log("User ID:", user.uid);
+        console.log("User Email:", user.email);
+      } else {
+        // User is not signed in
+        console.log("No user is logged in");
+        window.location.href = "/";
+      }
+    });
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
