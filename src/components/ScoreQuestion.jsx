@@ -43,7 +43,7 @@ const ScoreQuestion = ({ questionId, onSave, setting }) => {
         type="number"
         value={score}
         className="input input-bordered w-full"
-        onChange={(e) => setScore(e.target.value)}
+        onChange={(e) => setScore(parseInt(e.target.value))}
       />
       <label htmlFor="choicesNumber" className="label">
         No. of choices
@@ -53,7 +53,7 @@ const ScoreQuestion = ({ questionId, onSave, setting }) => {
         type="number"
         value={choicesNumber}
         className="input input-bordered w-full"
-        onChange={(e) => setChoicesNumber(e.target.value)}
+        onChange={(e) => setChoicesNumber(parseInt(e.target.value))}
       />
       <div className="space-y-4">
         {choices.map((choice, index) => (
@@ -71,7 +71,7 @@ const ScoreQuestion = ({ questionId, onSave, setting }) => {
                   const newChoices = [...choices];
                   newChoices[index] = {
                     ...newChoices[index],
-                    score: e.target.value,
+                    score: parseInt(e.target.value),
                   };
                   setChoices(newChoices);
                 }}

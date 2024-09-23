@@ -108,26 +108,47 @@ function FormViewer({ questions, setQuestions, role }) {
                         )}
                       </div>
                     ))}
-                    {question.rating.choices == undefined && (
-                      <div className="flex flex-col justify-center items-start gap-2" >
-                        {["ควรปรับปรุง","แย่","พอใช้","ดี","ดีมาก"].map((choice,i) => (
+                  {question.rating.choices == undefined && (
+                    <div className="flex flex-col justify-center items-start gap-2">
+                      {["ควรปรับปรุง", "แย่", "พอใช้", "ดี", "ดีมาก"].map(
+                        (choice, i) => (
                           <div className="flex gap-2 items-center" key={i}>
                             <input
                               className="radio-xs md:radio"
                               type="radio"
                               id={i}
                               name={question.id}
-                              value={i+1}
+                              value={i + 1}
                               onChange={(e) =>
                                 handleValueChange(question.id, e.target.value)
                               }
-                              checked={question.answer === (i+1).toString()}
+                              checked={question.answer === (i + 1).toString()}
                             />
                             <label htmlFor={index}>{choice}</label>
                           </div>
-                        ))}
-                        </div>
-                    )}
+                        )
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+              {question.type === "score" && (
+                <div className="flex flex-col gap-2">
+                  {question.setting.choices.map((choice, i) => (
+                    <div className="flex gap-2 items-center" key={i}>
+                      <input
+                        type="radio"
+                        id={i}
+                        name={question.id}
+                        value={choice.score}
+                        onChange={(e) =>
+                          handleValueChange(question.id, parseInt(e.target.value))
+                        }
+                        checked={question.answer === choice.score}
+                      />
+                      <label htmlFor={index}>{choice.text}</label>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
