@@ -108,6 +108,7 @@ function FormSubmit() {
     }
     const data = {
       form: selectedForm,
+      class: user.class,
       user: { id: user.id, name: user.name },
       instructor: {
         id: selectedInstructor,

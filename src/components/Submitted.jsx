@@ -34,7 +34,11 @@ function Submitted() {
       id: doc.id,
     }));
     console.log(formData);
-    setForms(formData);
+    setForms(formData.sort((a, b) => {
+      const dateA = new Date(a.submitDate);
+      const dateB = new Date(b.submitDate);
+      return dateB - dateA;
+    }));
   };
 
   const handlePageClick = (data) => {

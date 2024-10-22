@@ -61,7 +61,7 @@ function FormUpdate() {
         links={[
           { label: "Home", value: "/" },
           { label: "Dashboard", value: "/dashboard" },
-          { label: "Update Form", value: "/form/update" },
+          { label: "Update Form", value: `/form/update/${form_id}` },
         ]}
       />
       <h1 className="mt-5 text-2xl w-full text-center font-opunbold">ตอบแบบประเมิน</h1>

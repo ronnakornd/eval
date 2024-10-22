@@ -13,6 +13,7 @@ import InactiveClass from "../components/InactiveClass";
 import Unread from "../components/Unread";
 import Submitted from "../components/Submitted";
 import FormList from "../components/FormList";
+import SubmissionManagement from "../components/SubmissionManagement";
 import { useParams, useOutletContext } from "react-router-dom";
 import Breadcrumbs from "../components/Breadcrumbs";
 import UserImport from "../components/UserImport";
@@ -199,6 +200,15 @@ const Dashboard = () => {
             >
               Forms
             </a>
+            <a
+              role="tab"
+              className={`tab tab-bordered ${
+                activeTab === "submissions" ? "tab-active" : ""
+              }`}
+              onClick={() => setActiveTab("submissions")}
+            >
+              Submissions
+            </a>
           </>
         )}
       </div>
@@ -210,6 +220,7 @@ const Dashboard = () => {
         {activeTab === "unread" && <Unread />}
         {activeTab === "submitted" && <Submitted />}
         {activeTab === "forms" && <FormList />}
+        {activeTab === "submissions" && <SubmissionManagement />}
       </div>
 
       {/* New Class Modal */}
