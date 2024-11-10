@@ -52,7 +52,7 @@ const UserImport = () => {
         for (let userData of usersData) {
           try {
             // Destructure userData from CSV columns
-            const { name, email, password, role } = userData;
+            const { name, email, password, student_id, role, ER_report, interesting_case, hospital } = userData;
 
             // Create user in Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(
@@ -67,6 +67,10 @@ const UserImport = () => {
               name,
               email,
               role,
+              student_id,
+              ER_report,
+              interesting_case,
+              hospital,
               class: selectedClass,
             });
 

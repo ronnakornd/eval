@@ -37,7 +37,12 @@ function StudentManagement({
       ...doc.data(),
       id: doc.id,
     }));
-    setAvailableStudents(studentData);
+    let sortedStudent = studentData.sort((a, b) => {
+      if (a.hospital !== b.hospital) {
+        return a.hospital.localeCompare(b.hospital);
+      } 
+    });
+    setAvailableStudents(sortedStudent);
     setStudentsOptions(
       studentData
         .filter((student) => {
@@ -48,16 +53,11 @@ function StudentManagement({
           label: student.name,
         }))
     );
-    setGroupsOptions(
-      groups.map((group) => ({
-        value: group.id,
-        label: group.name,
-      }))
-    );
   };
+
   useEffect(() => {
     fetchStudents();
-  }, [students,groups]);
+  }, [students]);
 
   const handleAddStudent = async (selectedOption) => {
     const studentId = selectedOption.value;
@@ -93,46 +93,6 @@ function StudentManagement({
       return groupsOptions.find((option) => option.value === group.id);
     }
     return null;
-  };
-
-  const changeStudentGroup = async (studentId, groupId) => {
-    const sourceGroup = groups.find((group) =>
-      group.students.includes(studentId)
-    );
-    const destinationGroup = groups.find((group) => group.id === groupId);
-    if (sourceGroup) {
-      if (sourceGroup.id === destinationGroup.id) return;
-      const updatedSourceGroup = {
-        ...sourceGroup,
-        students: sourceGroup.students.filter((id) => id !== studentId),
-      };
-      const sourceGroupDoc = doc(
-        db,
-        "classes",
-        class_id,
-        "groups",
-        sourceGroup.id
-      );
-      await updateDoc(sourceGroupDoc, {
-        students: updatedSourceGroup.students,
-      });
-    }
-
-    const updatedDestinationGroup = {
-      ...destinationGroup,
-      students: [...destinationGroup.students, studentId],
-    };
-    const destinationGroupDoc = doc(
-      db,
-      "classes",
-      class_id,
-      "groups",
-      destinationGroup.id
-    );
-    await updateDoc(destinationGroupDoc, {
-      students: updatedDestinationGroup.students,
-    });
-     fetchClassData();
   };
 
   const sortStudents = (column) => {
@@ -181,7 +141,7 @@ function StudentManagement({
         <table className="table table-zebra-zebra">
           <thead className="border border-slate-700 bg-stone-300">
             <tr className="table-row">
-              <th className="w-2/12">
+              <th className="">
                 <p
                   className={`${currentSort === "id" ? "underline" : ""} cursor-pointer`}
                   onClick={() => {
@@ -189,10 +149,10 @@ function StudentManagement({
                     sortStudents("id");
                   }}
                 >
-                  ID 
+                  รหัสนักศึกษา
                 </p>
               </th>
-              <th className="w-3/12 border-l border-slate-700">
+              <th className=" border-l border-slate-700">
                 <p
                   className={`${currentSort === "name" ? "underline" : ""} cursor-pointer`}
                   onClick={() => {
@@ -200,10 +160,10 @@ function StudentManagement({
                     sortStudents("name");
                   }}
                 >
-                  Name
+                  ชื่อ
                 </p>
               </th>
-              <th className="w-2/12 border-l border-slate-700">
+              <th className=" border-l border-slate-700">
                 <p
                   className={`${currentSort === "group" ? "underline" : ""} cursor-pointer`}
                   onClick={() => {
@@ -211,41 +171,48 @@ function StudentManagement({
                     sortStudents("group");
                   }}
                 >
-                  Group
+                  โรงพยาบาล
                 </p>
               </th>
-              <th className="w-1/12 border-l border-black">Forms</th>
-              <th className="w-1/12 border-l border-slate-700">Delete</th>
+              <th className=" border-l border-slate-700">
+                <p
+                  className={`${currentSort === "group" ? "underline" : ""} cursor-pointer`}
+                  onClick={() => {
+                    setCurrentSort("group");
+                    sortStudents("group");
+                  }}
+                >
+                  กลุ่มปฏิบัติงาน
+                </p>
+              </th>
+              <th className=" border-l border-slate-700">
+                <p
+                  className={`${currentSort === "group" ? "underline" : ""} cursor-pointer`}
+                  onClick={() => {
+                    setCurrentSort("group");
+                    sortStudents("group");
+                  }}
+                >
+                  กลุ่ม interesting case
+                </p>
+              </th>
+              <th className=" border-l border-slate-700">Delete</th>
             </tr>
           </thead>
           <tbody>
             {selectedStudents.map((student, index) => {
               return (
                 <tr className="table-row border-b border-black" key={index}>
-                  <td className="border-l border-black">{student.id}</td>
+                  <td className="border-l border-black">{student.student_id}</td>
                   <td className="border-l border-black">{student.name}</td>
                   <td className="border-l border-black">
-                    <Select
-                      options={groupsOptions}
-                      defaultValue={getStudentGroup(student.id)}
-                      value={getStudentGroup(student.id)}
-                      onChange={(selectedOption) =>
-                        changeStudentGroup(student.id, selectedOption.value)
-                      }
-                    />
+                  {student.hospital}
                   </td>
                   <td className="border-l border-r border-black ">
-                    <button
-                      className="btn btn-neutral font-thin w-full"
-                      onClick={() => {
-                        document
-                          .getElementById("remove_student_modal")
-                          .showModal();
-                        setStudentToRemove(student.id);
-                      }}
-                    >
-                      ดูข้อมูล
-                    </button>
+                  {student.ER_report}
+                  </td>
+                  <td className="border-l border-r border-black ">
+                  {student.interesting_case}
                   </td>
                   <td className="border-l border-r border-black ">
                     <button

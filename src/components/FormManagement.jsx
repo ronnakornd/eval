@@ -103,19 +103,6 @@ function FormManagement({ forms, setForms, fetchClassData, class_id }) {
         <table className="table table-zebra-zebra">
           <thead className="border border-slate-700 bg-stone-300">
             <tr className="table-row">
-              <th className="w-2/12">
-                <p
-                  className={`${
-                    currentSort === "id" ? "underline" : ""
-                  } cursor-pointer`}
-                  onClick={() => {
-                    setCurrentSort("id");
-                    sortForms("id");
-                  }}
-                >
-                  ID
-                </p>
-              </th>
               <th className="w-5/12 border-l border-slate-700">
                 <p
                   className={`${
@@ -136,7 +123,6 @@ function FormManagement({ forms, setForms, fetchClassData, class_id }) {
             {selectedForms.map((form, index) => {
               return (
                 <tr className="table-row border-b border-black" key={index}>
-                  <td className="border-l border-black">{form.id}</td>
                   <td className="border-l border-black">{form.form.name}</td>
                   <td className="border-l border-r border-black ">
                     <button

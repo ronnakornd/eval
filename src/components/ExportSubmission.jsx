@@ -77,7 +77,7 @@ function ExportSubmission({ submissions }) {
   
       // Add questions and answers to the submission data
       submission.form.form.questions.forEach((question) => {
-        submissionData[question.question] = question.answer;
+        submissionData[question.question] = question.type == "rating"? parseInt(question.answer):question.answer;
       });
   
       return submissionData;
