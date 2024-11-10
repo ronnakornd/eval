@@ -10,6 +10,7 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL, getStorage, deleteObject  } from "firebase/storage";
 import ReactPaginate from "react-paginate";
 
 function StudentManagement({
@@ -20,6 +21,9 @@ function StudentManagement({
   class_id,
   fetchClassData
 }) {
+  const [profileImageToUpload, setProfileImageToUpload] = useState(null);
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
+  const [studentToEdit, setStudentToEdit] = useState(null);
   const [studentsOptions, setStudentsOptions] = useState([]);
   const [groupsOptions, setGroupsOptions] = useState([]);
   const [availableStudents, setAvailableStudents] = useState([]);
@@ -37,12 +41,7 @@ function StudentManagement({
       ...doc.data(),
       id: doc.id,
     }));
-    let sortedStudent = studentData.sort((a, b) => {
-      if (a.hospital !== b.hospital) {
-        return a.hospital.localeCompare(b.hospital);
-      } 
-    });
-    setAvailableStudents(sortedStudent);
+    setAvailableStudents(studentData);
     setStudentsOptions(
       studentData
         .filter((student) => {
@@ -55,9 +54,27 @@ function StudentManagement({
     );
   };
 
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    setProfileImageToUpload(file);
+    setProfileImagePreview(URL.createObjectURL(file));
+  };
+
   useEffect(() => {
     fetchStudents();
+    setStudents(students.sort(defaultSort));
   }, [students]);
+
+  const defaultSort = (a, b) => {
+    if (a.hospital !== b.hospital) {
+      return a.hospital.localeCompare(b.hospital);
+    } else if (a.ER_report !== b.ER_report) {
+      return a.ER_report.localeCompare(b.ER_report);
+    } else {
+      return a.student_id.localeCompare(b.student_id);
+    }
+  };
 
   const handleAddStudent = async (selectedOption) => {
     const studentId = selectedOption.value;
@@ -65,7 +82,7 @@ function StudentManagement({
       const studentDoc = doc(db, "users", studentId);
       const studentData = await getDoc(studentDoc);
       if (!studentData.exists()) return;
-      if ( studentData.data().class == class_id ) return;
+      if (studentData.data().class == class_id) return;
       await updateDoc(studentDoc, {
         class: class_id,
       });
@@ -93,6 +110,26 @@ function StudentManagement({
       return groupsOptions.find((option) => option.value === group.id);
     }
     return null;
+  };
+
+  const updateProfilePic = async () => {
+
+    if (profileImageToUpload) {
+      if(studentToEdit.profileImageUrl){
+        const oldImageRef = ref(getStorage(), studentToEdit.profileImageUrl);
+        await deleteObject(oldImageRef);
+      }     
+      const storageRef = ref(getStorage(), `profileImages/${studentToEdit.id}`);
+      await uploadBytes(storageRef, profileImageToUpload);
+      const profileImageUrl = await getDownloadURL(storageRef);
+      await updateDoc(doc(db, "users", studentToEdit.id), {
+        profileImageUrl,
+      });
+      setStudentToEdit(null);
+      setProfileImageToUpload(null);
+      setProfileImagePreview(null);
+      fetchClassData();
+    }
   };
 
   const sortStudents = (column) => {
@@ -143,7 +180,9 @@ function StudentManagement({
             <tr className="table-row">
               <th className="">
                 <p
-                  className={`${currentSort === "id" ? "underline" : ""} cursor-pointer`}
+                  className={`${
+                    currentSort === "id" ? "underline" : ""
+                  } cursor-pointer`}
                   onClick={() => {
                     setCurrentSort("id");
                     sortStudents("id");
@@ -152,9 +191,24 @@ function StudentManagement({
                   รหัสนักศึกษา
                 </p>
               </th>
+              <th className="border-l border-slate-700">
+                <p
+                  className={`${
+                    currentSort === "id" ? "underline" : ""
+                  } cursor-pointer`}
+                  onClick={() => {
+                    setCurrentSort("id");
+                    sortStudents("id");
+                  }}
+                >
+                  รูป
+                </p>
+              </th>
               <th className=" border-l border-slate-700">
                 <p
-                  className={`${currentSort === "name" ? "underline" : ""} cursor-pointer`}
+                  className={`${
+                    currentSort === "name" ? "underline" : ""
+                  } cursor-pointer`}
                   onClick={() => {
                     setCurrentSort("name");
                     sortStudents("name");
@@ -165,7 +219,9 @@ function StudentManagement({
               </th>
               <th className=" border-l border-slate-700">
                 <p
-                  className={`${currentSort === "group" ? "underline" : ""} cursor-pointer`}
+                  className={`${
+                    currentSort === "group" ? "underline" : ""
+                  } cursor-pointer`}
                   onClick={() => {
                     setCurrentSort("group");
                     sortStudents("group");
@@ -176,7 +232,9 @@ function StudentManagement({
               </th>
               <th className=" border-l border-slate-700">
                 <p
-                  className={`${currentSort === "group" ? "underline" : ""} cursor-pointer`}
+                  className={`${
+                    currentSort === "group" ? "underline" : ""
+                  } cursor-pointer`}
                   onClick={() => {
                     setCurrentSort("group");
                     sortStudents("group");
@@ -187,7 +245,9 @@ function StudentManagement({
               </th>
               <th className=" border-l border-slate-700">
                 <p
-                  className={`${currentSort === "group" ? "underline" : ""} cursor-pointer`}
+                  className={`${
+                    currentSort === "group" ? "underline" : ""
+                  } cursor-pointer`}
                   onClick={() => {
                     setCurrentSort("group");
                     sortStudents("group");
@@ -203,21 +263,35 @@ function StudentManagement({
             {selectedStudents.map((student, index) => {
               return (
                 <tr className="table-row border-b border-black" key={index}>
-                  <td className="border-l border-black">{student.student_id}</td>
-                  <td className="border-l border-black">{student.name}</td>
                   <td className="border-l border-black">
-                  {student.hospital}
+                    {student.student_id}
+                  </td>
+                  <td className="border-l border-black">
+                    <img
+                      src={student.profileImageUrl}
+                      alt=""
+                      className="w-32 h-32 bg-slate-300 text-black rounded-sm"
+                      onClick={() => {
+                        document
+                          .getElementById("upload_profile_image_modal")
+                          .showModal();
+                        setProfileImagePreview(student.profileImageUrl);
+                        setStudentToEdit(student);
+                      }}
+                    />
+                  </td>
+                  <td className="border-l border-black">{student.name}</td>
+                  <td className="border-l border-black">{student.hospital}</td>
+                  <td className="border-l border-r border-black ">
+                    {student.ER_report}
                   </td>
                   <td className="border-l border-r border-black ">
-                  {student.ER_report}
-                  </td>
-                  <td className="border-l border-r border-black ">
-                  {student.interesting_case}
+                    {student.interesting_case}
                   </td>
                   <td className="border-l border-r border-black ">
                     <button
                       className="btn btn-error w-full"
-                      onClick={() => {
+                      onClick={(e) => {
                         document
                           .getElementById("remove_student_modal")
                           .showModal();
@@ -249,6 +323,47 @@ function StudentManagement({
         </div>
       </dialog>
 
+      <dialog id="upload_profile_image_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">อัปโหลดรูปโปรไฟล์</h3>
+          <div className="p-5 flex justify-center items-center">
+            <img
+              id="profile_image_preview"
+              className="w-32 h-32 mt-4 bg-slate-300 rounded-sm"
+              alt=""
+              src={profileImagePreview}
+            />
+            <input
+              className="input file-input file-input-sm file-input-bordered"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                handleProfileImageChange(e);
+              }}
+            />
+          </div>
+          <div className="modal-action">
+            <button
+              className="btn btn-neutral"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                updateProfilePic();
+              }}
+            >
+              Upload
+            </button>
+            <button
+              className="btn"
+              onClick={() =>
+                document.getElementById("upload_profile_image_modal").close()
+              }
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </dialog>
 
       <div className="flex items-center justify-center my-4">
         <ReactPaginate

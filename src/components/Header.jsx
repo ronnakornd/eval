@@ -13,7 +13,12 @@ function Header({ logout, user }) {
             <div className="drawer-content">
               {/* Page content here */}
               <label htmlFor="my-drawer-4" className="text-white">
+                <div className="flex justify-center items-center gap-3">
+                {user.profileImageUrl && (
+                <img className="w-8 h-8 rounded-full bg-slate-300" src={user.profileImageUrl} alt="" />
+                )}
                 <span className="text-lg">{user.name}</span>
+                </div>
               </label>
             </div>
             <div className="drawer-side z-30">

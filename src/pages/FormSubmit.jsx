@@ -109,7 +109,7 @@ function FormSubmit() {
     const data = {
       form: selectedForm,
       class: user.class,
-      user: { id: user.id, name: user.name },
+      user: { id: user.id, name: user.name, profileImageUrl: user.profileImageUrl},
       instructor: {
         id: selectedInstructor,
         name: instructors.find(

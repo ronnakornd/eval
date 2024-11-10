@@ -27,8 +27,8 @@ function Unread() {
       collection(db, "submissions"),
       where("approve", "==", false),
       user.role == "instructor"
-        ? where("instructor", "==", { id: user.id, name: user.name })
-        : where("user", "==", { id: user.id, name: user.name })
+        ? where("instructor", "==", { id: user.id, name: user.name})
+        : where("user", "==", { id: user.id, name: user.name, profileImageUrl: user.profileImageUrl })
     );
     const formDocs = await getDocs(q);
     const formData = formDocs.docs.map((doc) => ({

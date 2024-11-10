@@ -78,6 +78,7 @@ function FormUpdate() {
         <h1 className="text-sm md:text-lg text-stone-600 fontbold p-2">
           {submission ? submission.user.name : ""}
         </h1>
+        <img className="w-32 h-32 rounded-sm" src={submission? submission.user.profileImageUrl:""} alt="" />
         <label className="label " htmlFor="">
           อาจารย์ผู้ประเมิน
         </label>

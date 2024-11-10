@@ -54,7 +54,7 @@ const Dashboard = () => {
     if (user && user.role === "student") {
       getMyClass();
     }
-    if(user && user.role === "admin"){
+    if (user && user.role === "admin") {
       setActiveTab("activeClass");
     }
   }, [tab, user]);
@@ -113,11 +113,9 @@ const Dashboard = () => {
             </h2>
           </div>
           <div>
-            {myGroup && (
-              <div className="flex justify-start items-center space-x-4 mb-4">
-                <h2 className="text-lg">กลุ่ม {myGroup.name}</h2>
-              </div>
-            )}
+            <h2 className="text-sm">โรงพยาบาล{user.hospital}</h2>
+            <h2 className="text-xs">กลุ่มปฏิบัติงาน/ER report/Journal กลุ่ม {user.ER_report}</h2>
+            <h2 className="text-xs">กลุ่มปฏิบัติงานรพ.ศูนย์ {user.interesting_case}</h2>
           </div>
         </>
       )}
