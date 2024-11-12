@@ -11,14 +11,17 @@ import {
   addDoc,
 } from "firebase/firestore";
 import { db } from "../FirebaseConfig";
-import { useParams, useOutletContext } from "react-router-dom";
+import {useOutletContext, useLocation } from "react-router-dom";
 import FormViewer from "../components/FormViewer";
 
 function FormUpdate() {
-  const { form_id } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const form_id = queryParams.get('id');
   const [user, setUser] = useOutletContext();
   const [selectedForm, setSelectedForm] = useState(null);
   const [submission, setSubmission] = useState(null);
+  const [studentProfileImage, setStudentProfileImage] = useState(null);
 
   const fetchForm = async () => {
     const formDoc = doc(db, "submissions", form_id);
@@ -27,7 +30,10 @@ function FormUpdate() {
     console.log(formData);
     setSubmission(formData);
     setSelectedForm(formData.form);
-    
+    const studentDoc = doc(db, "users", formData.user.id);
+    const studentQuery = await getDoc(studentDoc);
+    const studentData = studentQuery.data();
+    setStudentProfileImage(studentData.profileImageUrl);
   };
 
   const handleChange = (questions) => {
@@ -53,6 +59,7 @@ function FormUpdate() {
 
   useEffect(() => {
     fetchForm();
+    console.log(form_id);
   }, [user, form_id]);
 
   return (
@@ -61,7 +68,7 @@ function FormUpdate() {
         links={[
           { label: "Home", value: "/" },
           { label: "Dashboard", value: "/dashboard" },
-          { label: "Update Form", value: `/form/update/${form_id}` },
+          { label: "Update Form", value: `/form_update?id=${form_id}` },
         ]}
       />
       <h1 className="mt-5 text-2xl w-full text-center font-opunbold">ตอบแบบประเมิน</h1>
@@ -78,7 +85,7 @@ function FormUpdate() {
         <h1 className="text-sm md:text-lg text-stone-600 fontbold p-2">
           {submission ? submission.user.name : ""}
         </h1>
-        <img className="w-32 h-32 rounded-sm" src={submission? submission.user.profileImageUrl:""} alt="" />
+        <img className="w-32 h-32 rounded-sm" src={studentProfileImage? studentProfileImage:""} alt="" />
         <label className="label " htmlFor="">
           อาจารย์ผู้ประเมิน
         </label>

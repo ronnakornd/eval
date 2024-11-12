@@ -5,6 +5,17 @@
   },
   "hosting": {
     "public": "dist",
+    "headers": [
+      {
+        "source": "**/*.css",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "text/css"
+          }
+        ]
+      }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -12,7 +23,11 @@
     ] ,
     "rewrites": [
       {
-        "source": "**",
+        "source": "**", 
+        "destination": "/index.html"
+      },
+      {
+        "source": "/class/*", 
         "destination": "/index.html"
       }
     ]

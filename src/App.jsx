@@ -31,18 +31,20 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename="/">
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/dashboard/:tab" element={<Dashboard />} />
-              <Route path="/class/:class_id" element={<Class />} />
-              <Route path="/form/create" element={<FormEdit />} />
-              <Route path="/form/edit/:form_id" element={<FormEdit />} />
-              <Route path="/form/submit/" element={<FormSubmit />} />
-              <Route path="/form/update/:form_id" element={<FormUpdate />} />
+              <Route path="/dashboard" element={<Dashboard />} >
+                  <Route index element={<Dashboard />} />
+                  <Route path=":tab" element={<Dashboard/>}/>
+              </Route>
+              <Route path="/submit/" element={<FormSubmit />} />
+              <Route path="form_submit" element={<FormSubmit />} />
+              <Route path="form_update" element={<FormUpdate  />} />
+              <Route path="form_edit" element={<FormEdit />} />
+              <Route path="class" element={<Class/>} />
             </Route>
           </Routes>
         </Suspense>

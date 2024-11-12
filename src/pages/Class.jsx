@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../FirebaseConfig";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Select from "react-select";
 import StudentManagement from "../components/StudentManagement";
 import GroupManagement from "../components/GroupManagement";
@@ -24,7 +24,9 @@ const Class = () => {
   const [groups, setGroups] = useState([]);
   const [forms, setForms] = useState([]);
   const [currentClass, setCurrentClass] = useState(null);
-  const { class_id } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const class_id = queryParams.get("id");
   const [activeTab, setActiveTab] = useState("student");
   const fetchClassData = async () => {
     if (class_id) {
@@ -89,7 +91,7 @@ const Class = () => {
           { label: "Classes", value: "/dashboard/activeClass" },
           {
             label: currentClass ? currentClass.name : "",
-            value: `/class/${currentClass ? currentClass.id : ""}`,
+            value: `/class?id=${currentClass ? currentClass.id : ""}`,
           },
         ]}
       />
@@ -137,14 +139,6 @@ const Class = () => {
             setGroups={setGroups}
             class_id={currentClass ? currentClass.id : null}
             fetchClassData={fetchClassData}
-          />
-        )}
-        {activeTab === "group" && (
-          <GroupManagement
-            groups={groups}
-            setGroups={setGroups}
-            fetchClassData={fetchClassData}
-            class_id={currentClass ? currentClass.id : null}
           />
         )}
         {activeTab === "forms" && (

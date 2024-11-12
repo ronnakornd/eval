@@ -309,7 +309,7 @@ const Dashboard = () => {
         <div>
           <a
             className="btn btn-primary text-white text-2xl btn-circle fixed bottom-5 right-5 "
-            href="/form/submit"
+            href="/submit"
           >
             +
           </a>

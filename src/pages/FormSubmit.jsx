@@ -109,7 +109,7 @@ function FormSubmit() {
     const data = {
       form: selectedForm,
       class: user.class,
-      user: { id: user.id, name: user.name, profileImageUrl: user.profileImageUrl},
+      user: { id: user.id, name: user.name},
       instructor: {
         id: selectedInstructor,
         name: instructors.find(
@@ -144,7 +144,7 @@ function FormSubmit() {
         links={[
           { label: "Home", value: "/" },
           { label: "Dashboard", value: "/dashboard" },
-          { label: "Submit Form", value: "/form/submit" },
+          { label: "Submit Form", value: "/submit" },
         ]}
       />
           <h1 className="text-2xl w-full text-center font-opunbold my-5">ส่งแบบประเมิน</h1>

@@ -100,7 +100,7 @@ const ActiveClass = () => {
             <tr
               key={cls.id}
               className="border border-black bg-slate-100  hover cursor-pointer"
-              onClick={() => (window.location.href = `/class/${cls.id}`)}
+              onClick={() => (window.location.href = `/class?id=${cls.id}`)}
             >
               <td className="border-r border-black">{cls.name}</td>
               <td className="border-r border-black">{cls.level}</td>

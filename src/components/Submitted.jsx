@@ -84,7 +84,7 @@ function Submitted() {
             >
               <td className="border-r border-black">
                 {" "}
-                <a className="link" href={`/form/update/${cls.id}`}>
+                <a className="link" href={`/form_update?id=${cls.id}`}>
                   {cls.form? cls.form.form.name:""}
                 </a>
               </td>
@@ -114,7 +114,7 @@ function Submitted() {
 
     <div className="flex flex-col gap-2 md:hidden">
       {selectedForms.map((cls) => (
-        <a href={`/form/update/${cls.id}`} className="card bg-slate-50 p-4 shadow-sm">
+        <a href={`/form_update?id=${cls.id}`} className="card bg-slate-50 p-4 shadow-sm">
           <div className="card-title text-xs">{cls.form? cls.form.form.name:""}</div>
           <div>
             <p className="text-xs text-stone-500">{cls.submitDate? cls.submitDate: ""}</p>
