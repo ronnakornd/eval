@@ -14,7 +14,7 @@ import Unread from "../components/Unread";
 import Submitted from "../components/Submitted";
 import FormList from "../components/FormList";
 import SubmissionManagement from "../components/SubmissionManagement";
-import { useParams, useOutletContext } from "react-router-dom";
+import { useParams, useOutletContext, useLocation } from "react-router-dom";
 import Breadcrumbs from "../components/Breadcrumbs";
 import UserImport from "../components/UserImport";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -32,7 +32,11 @@ const Dashboard = () => {
     endDate: "",
     active: true,
   });
-  const { tab } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const tab = queryParams.get('tab');
+
+
 
   const getMyClass = async () => {
     const classDoc = doc(db, "classes", user.class);

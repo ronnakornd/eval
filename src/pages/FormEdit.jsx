@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import FormBuilder from "../components/FormBuilder";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../FirebaseConfig";
 import Breadcrumbs from "../components/Breadcrumbs";
 
 function FormEdit() {
-  const { form_id } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const form_id = queryParams.get('id');
   const [form, setForm] = useState(null);
 
   const fetchForm = async (id) => {
@@ -33,8 +35,8 @@ function FormEdit() {
         <Breadcrumbs
           links={[
             { label: "Home", value: "/" },
-            { label: "Dashboard", value: "/dashboard/forms" },
-            { label: "Edit Form", value: `/forms/edit/${form_id}` },
+            { label: "Dashboard", value: "/dashboard?tab=forms" },
+            { label: "Edit Form", value: `/form_edit?id=${form_id}` },
           ]}
         />
       </div>

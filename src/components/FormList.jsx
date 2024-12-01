@@ -129,7 +129,7 @@ const formList = () => {
               <td className="border-r border-black">
                 <a
                   className="btn btn-neutral w-full"
-                  href={`/form/edit/${cls.id}`}
+                  href={`/form_edit?id=${cls.id}`}
                 >
                   Edit
                 </a>
