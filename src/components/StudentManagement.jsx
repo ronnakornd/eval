@@ -56,7 +56,6 @@ function StudentManagement({
 
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
-    console.log(file);
     setProfileImageToUpload(file);
     setProfileImagePreview(URL.createObjectURL(file));
   };

@@ -9,6 +9,7 @@ import Class from "./pages/Class";
 import FormEdit from "./pages/FormEdit";
 import FormSubmit from "./pages/FormSubmit";
 import FormUpdate from "./pages/FormUpdate";
+import Profile from "./pages/Profile";
 import "@fontsource/pridi";
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
               <Route path="form_submit" element={<FormSubmit />} />
               <Route path="form_update" element={<FormUpdate  />} />
               <Route path="form_edit" element={<FormEdit />} />
+              <Route path="profile_edit" element={<Profile />} />
               <Route path="class" element={<Class/>} />
             </Route>
           </Routes>

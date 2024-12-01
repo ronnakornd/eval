@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../FirebaseConfig';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useOutletContext } from 'react-router-dom';
@@ -9,87 +9,90 @@ function Profile() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
-  const [profileImage, setProfileImage] = useState(null);
+  const [profileImageToUpload, setProfileImageToUpload] = useState(null);
   const [profileImagePreview, setProfileImagePreview] = useState(null);
   const [user,setUser] = useOutletContext();
+  const [studentToEdit, setStudentToEdit] = useState(null);
 
-  const handleLogin = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert('Logged in successfully');
-    } catch (error) {
-      console.error('Error logging in:', error);
-      alert(error.message);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      alert('Logged out successfully');
-    } catch (error) {
-      console.error('Error logging out:', error);
-      alert(error.message);
-    }
-  };
-
+ 
   const handleRoleChange = (e) => {
     setRole(e.target.value);
   };
 
-  const handleRegister = async () => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Upload profile image to Firebase Storage
-      let profileImageUrl = '';
-      if (profileImage) {
-        const storage = getStorage();
-        const storageRef = ref(storage, `profileImages/${user.uid}`);
-        await uploadBytes(storageRef, profileImage);
-        profileImageUrl = await getDownloadURL(storageRef);
-      }
-
-      // Add additional fields to Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        email: user.email,
-        name: name,
-        role: role,
-        profileImageUrl: profileImageUrl,
-        createdAt: new Date()
+  const updateProfilePic = async () => {
+    if (profileImageToUpload) {
+      if(studentToEdit.profileImageUrl){
+        const oldImageRef = ref(getStorage(), studentToEdit.profileImageUrl);
+        await deleteObject(oldImageRef);
+      }     
+      const storageRef = ref(getStorage(), `profileImages/${studentToEdit.id}`);
+      await uploadBytes(storageRef, profileImageToUpload);
+      const profileImageUrl = await getDownloadURL(storageRef);
+      await updateDoc(doc(db, "users", studentToEdit.id), {
+        profileImageUrl,
       });
-
-      alert('Registered successfully');
-    } catch (error) {
-      console.error('Error registering:', error);
-      alert(error.message);
+      setProfileImageToUpload(null);
+      setProfileImagePreview(null);
     }
   };
 
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
-    setProfileImage(file);
+    setProfileImageToUpload(file);
     setProfileImagePreview(URL.createObjectURL(file));
   };
 
+  const fetchUserData = async () => {
+    const userDoc = doc(db, "users", user.id);
+    const userSnap = await getDoc(userDoc);
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      setStudentToEdit({id: userSnap.id, ...userData});
+      setEmail(userData.email);
+      setName(userData.name);
+      setProfileImagePreview(userData.profileImageUrl);
+    } else {
+      console.log("No such document!");
+    }
+  }
+
+  const updateUser = async () => {
+    const userDoc = doc(db, "users", user.id);
+    await updateDoc(userDoc, {
+      name
+    });
+    await updateProfilePic();
+    alert('Profile Updated Successfully');
+    fetchUserData();
+  }
+  
   useEffect(() => {
-       if(user){
-           window.location.href = '/dashboard';
-       }
-   }, [user]);
+    fetchUserData();
+  }
+  , [user]);
+
 
   return (
     <div className="container md:mx-auto md:px-20 pt-10 px-4 md:pt-40 pb-20 min-h-screen text-slate-900">
-   
-      {isRegistering && (
-        <>
+        <div className='flex flex-col justify-center'>
           <div className="form-control mb-4">
             <div className="flex justify-center">
             {profileImagePreview && (
               <img src={profileImagePreview} alt="Profile Preview" className="mt-4 w-64 h-64 object-cover rounded-full" />
             )}
             </div>
+            <div className="form-control mb-4">
+            <label className="label" htmlFor="profileImage">
+              Profile Image
+            </label>
+            <input
+              type="file"
+              id="profileImage"
+              className="input input-bordered"
+              onChange={handleProfileImageChange}
+              required
+            />
+          </div>
             <label className="label" htmlFor="username">
               Name
             </label>
@@ -101,39 +104,11 @@ function Profile() {
               onChange={(e) => setName(e.target.value)}
               required
             />
-          </div>
-          <div className="form-control mb-4">
-            <label className="label" htmlFor="role">
-              Role
-            </label>
-            <select
-              id="role"
-              className="select select-bordered"
-              value={role}
-              onChange={handleRoleChange}
-              required
-            >
-              <option value="" disabled>Select Role</option>
-              <option value="instructor">ผู้สอน</option>
-              <option value="student">ผู้เรียน</option>
-            </select>
-          </div>
-          <div className="form-control mb-4">
-            <label className="label" htmlFor="profileImage">
-              Profile Image
-            </label>
-            <input
-              type="file"
-              id="profileImage"
-              className="input input-bordered"
-              onChange={handleProfileImageChange}
-              required
-            />
-
-          </div>
-        </>
-      )}
-
+          </div>    
+           <button className='btn btn-neutral ' onClick={updateUser}>
+            Update Profile
+           </button>
+        </div>
     </div>
   );
 }
