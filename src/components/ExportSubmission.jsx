@@ -173,13 +173,15 @@ function ExportSubmission({ submissions }) {
           const studentData = {
             ชื่อนักศึกษา: student.name,
             รหัสนักศึกษา: student.student_id,
+            กลุ่มปฏิบัติงาน_ER_report_Journal: parseInt(student.ER_report),
+            กลุ่มInteresting_case: student.interesting_case,
           };
 
           const studentSubmissions = selectedSubmissionsData.filter(
             (submission) => submission["ผู้ส่ง"] === student.name
           );
 
-          if (hospital === "ศรีนครินทร์") {
+          if (hospital === "ศรีนครินทร์" && selectedFormName.includes("ปฏิบัติงาน")) {
             const snkSubmissions = studentSubmissions.filter(
               (submission) =>
                 submission["ฝึกปฏิบัติงาน (แผนก/หน่วย/โรงพยาบาล)"] ===
@@ -208,14 +210,26 @@ function ExportSubmission({ submissions }) {
               (acc, curr) => acc + curr["คะแนนรวม"],
               0
             );
-
             studentData["รพศรีนครินทร์ (เต็ม 25)"] = snkMaxScore
               ? Math.round((snkTotalScore / snkMaxScore) * 25)
               : 0;
             studentData["รพสมทบ (เต็ม 5)"] = otherMaxScore
               ? Math.round((otherTotalScore / otherMaxScore) * 5)
               : 0;
+            studentData["คะแนน (เต็ม 30)"] =
+              studentData["รพศรีนครินทร์ (เต็ม 25)"] +
+              studentData["รพสมทบ (เต็ม 5)"];
           } else {
+            let roundScore = 0;
+            if(selectedFormName.includes("ปฏิบัติงาน")){
+                roundScore = 30;
+            }else if (selectedFormName.includes("ER Report")){
+                roundScore = 10;
+            }else if (selectedFormName.includes("Journal")){
+                roundScore = 2.5;
+            }else if (selectedFormName.includes("Interesting Case")){
+                roundScore = 2.5;
+            }
             const totalScore = studentSubmissions.reduce(
               (acc, curr) => acc + curr["คะแนนที่ได้"],
               0
@@ -224,15 +238,19 @@ function ExportSubmission({ submissions }) {
               (acc, curr) => acc + curr["คะแนนรวม"],
               0
             );
-
-            studentData["คะแนน (เต็ม 30)"] = maxScore
-              ? Math.round((totalScore / maxScore) * 30)
+            studentData[`คะแนน (เต็ม ${roundScore})`] = maxScore
+              ? ((totalScore / maxScore) * roundScore).toFixed(1)
               : 0;
           }
-
           return studentData;
         });
 
+      calculatedData.sort((a, b) => {
+        if (a.กลุ่มปฏิบัติงาน_ER_report_Journal !== b.กลุ่มปฏิบัติงาน_ER_report_Journal) {
+          return a.กลุ่มปฏิบัติงาน_ER_report_Journal - b.กลุ่มปฏิบัติงาน_ER_report_Journal;
+        }
+        return b.กลุ่มInteresting_case - a.กลุ่มInteresting_case;
+      });
       const wsCalculated = XLSX.utils.json_to_sheet(calculatedData);
       XLSX.utils.book_append_sheet(wb, wsCalculated, `${hospital}_calculated`);
     });
