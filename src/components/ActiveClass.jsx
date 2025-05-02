@@ -111,7 +111,7 @@ const ActiveClass = () => {
                     type="checkbox"
                     className="toggle toggle-primary"
                     checked={cls.active}
-                    onChange={() => {
+                    onChange={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       handleStatusToggle(cls.id, cls.active);

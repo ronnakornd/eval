@@ -81,8 +81,8 @@ const UserImport = () => {
         }
 
         alert("All users have been processed.");
-        await signOut(auth);
-        window.location.href = "/";
+        //await signOut(auth);
+        //window.location.href = "/";
       },
       error: (error) => {
         console.error("Error parsing CSV file:", error);

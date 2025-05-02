@@ -60,6 +60,18 @@ function StudentManagement({
     setProfileImagePreview(URL.createObjectURL(file));
   };
 
+  const deleteAllStudentsInClass = async () => { 
+    const q = query(collection(db, "users"), where("role", "==", "student"), where("class", "==", class_id));
+    const studentDocs = await getDocs(q);
+    const batch = db.batch();
+
+    studentDocs.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+
+    await batch.commit();
+  };
+
   useEffect(() => {
     fetchStudents();
     setStudents(students.sort(defaultSort));
@@ -168,10 +180,12 @@ function StudentManagement({
 
   return (
     <div>
+      <h2 className="text-2xl font-bold mb-2">จัดการผู้เรียน</h2>
       <label className="text-lg" htmlFor="">
         เพิ่มผู้เรียน
       </label>
       <Select options={studentsOptions} onChange={handleAddStudent} />
+      <button className="btn btn-neutral mt-5 float-end mb-5" onClick={()=> deleteAllStudentsInClass()}>ลบผู้เรียนทั้งหมด</button>
       <div className="h-4"></div>
       <div>
         <table className="table table-zebra-zebra">
